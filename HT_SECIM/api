@@ -1,0 +1,40 @@
+//-------------------------------------------------------------
+//  VERI KAYNAGI
+//
+//  Uygulama secim verisini nereden alacak.
+//
+//  KAYNAK = API   -> asagidaki adresten cekilir
+//  KAYNAK = JSON  -> yanindaki veri.json okunur, aga hic cikilmaz
+//
+//  KAYNAK = JSON yazmak ACIL CIKIS KAPISIDIR: API yayin gecesi
+//  tuhaflik yaparsa tek satirla eski duzene donulur.
+//
+//  DIKKAT: satirlar "=" ile bolunur, deger icinde "=" kullanma.
+//-------------------------------------------------------------
+
+KAYNAK  = API
+
+//  Sonunda / olmadan. API baska makineye tasinirsa burasi degisir,
+//  uygulamayi yeniden derlemek gerekmez.
+
+ADRES   = http://localhost:5188
+
+//  API'nin appsettings.json dosyasindaki HtSecim:OkumaAnahtari degeri.
+//  Bu anahtar yalnizca OKUMA yetkisi verir; veriyi degistiremez.
+
+ANAHTAR = HT-SECIM-OKUMA-2027
+
+//-------------------------------------------------------------
+//  ARALIK      : kac saniyede bir surum sorulacak
+//  ZAMANASIMI  : tek bir istek en fazla kac saniye beklenecek
+//
+//  Surum numarasi degismediyse hicbir sey indirilmez; sorgu
+//  birkac yuz bayttir. Veri degistiginde ~200 KB'lik tam paket
+//  bir kez cekilir.
+//
+//  Cok kisaltmanin faydasi yok: veri zaten sandik sayimiyla
+//  dakikalar icinde degisiyor.
+//-------------------------------------------------------------
+
+ARALIK     = 25
+ZAMANASIMI = 15

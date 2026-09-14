@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6B7E7DB7-DA4C-476A-9356-DC9FCAC1F61D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>HT_SECIM</RootNamespace>
+    <AssemblyName>HT_SECIM</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\CLog.cs" />
+    <Compile Include="UI\IScenePage.cs" />
+    <Compile Include="UI\ScenePageFactory.cs" />
+    <Compile Include="Core\CommandRepository.cs" />
+    <Compile Include="Core\StageIndex.cs" />
+    <Compile Include="Core\SceneTreeIndex.cs" />
+    <Compile Include="Core\VizCommander.cs" />
+    <Compile Include="Core\VizYazim.cs" />
+    <Compile Include="Data\Models.cs" />
+    <Compile Include="Data\DataService.cs" />
+    <Compile Include="Core\ConfigPaths.cs" />
+    <Compile Include="Core\ConfigReader.cs" />
+    <Compile Include="Core\EngineRepository.cs" />
+    <Compile Include="Core\SceneRepository.cs" />
+    <Compile Include="Core\Tema.cs" />
+    <Compile Include="Core\ApiAyarlari.cs" />
+    <Compile Include="Core\VeriKaynagi.cs" />
+    <Compile Include="Core\VizClient.cs" />
+    <Compile Include="Core\VizEngine.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\IlSecici.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\IlSecici.Designer.cs">
+      <DependentUpon>IlSecici.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page01_BarGrafik.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page01_BarGrafik.Designer.cs">
+      <DependentUpon>Page01_BarGrafik.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page02_BarGrafikPartiler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page02_BarGrafikPartiler.Designer.cs">
+      <DependentUpon>Page02_BarGrafikPartiler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page03_05_PastaVekil.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page03_05_PastaVekil.Designer.cs">
+      <DependentUpon>Page03_05_PastaVekil.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page04_06_PastaOran.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page04_06_PastaOran.Designer.cs">
+      <DependentUpon>Page04_06_PastaOran.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page07_HaritaArtanAzalan.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page07_HaritaArtanAzalan.Designer.cs">
+      <DependentUpon>Page07_HaritaArtanAzalan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page08_HaritaSehirler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page08_HaritaSehirler.Designer.cs">
+      <DependentUpon>Page08_HaritaSehirler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page09_HaritaTrGeneli.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page09_HaritaTrGeneli.Designer.cs">
+      <DependentUpon>Page09_HaritaTrGeneli.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page10_MvHaritaArtanAzalan.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page10_MvHaritaArtanAzalan.Designer.cs">
+      <DependentUpon>Page10_MvHaritaArtanAzalan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page11_MvHaritaPartiler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page11_MvHaritaPartiler.Designer.cs">
+      <DependentUpon>Page11_MvHaritaPartiler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page12_MvHaritaSehirler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page12_MvHaritaSehirler.Designer.cs">
+      <DependentUpon>Page12_MvHaritaSehirler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page13_MvMeclis.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page13_MvMeclis.Designer.cs">
+      <DependentUpon>Page13_MvMeclis.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page14_MvMeclisIttifak.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page14_MvMeclisIttifak.Designer.cs">
+      <DependentUpon>Page14_MvMeclisIttifak.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page15_CbYillikKarsilastirma.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page15_CbYillikKarsilastirma.Designer.cs">
+      <DependentUpon>Page15_CbYillikKarsilastirma.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page16_IkiliKarsilastirma.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page16_IkiliKarsilastirma.Designer.cs">
+      <DependentUpon>Page16_IkiliKarsilastirma.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page17_MvIkiliKiyaslama.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page17_MvIkiliKiyaslama.Designer.cs">
+      <DependentUpon>Page17_MvIkiliKiyaslama.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page18_MvPartilerIkiSecim.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page18_MvPartilerIkiSecim.Designer.cs">
+      <DependentUpon>Page18_MvPartilerIkiSecim.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page19_MvPartilerIkiSecimBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page19_MvPartilerIkiSecimBar.Designer.cs">
+      <DependentUpon>Page19_MvPartilerIkiSecimBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Page20_21_YillikKarsilastirma.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Page20_21_YillikKarsilastirma.Designer.cs">
+      <DependentUpon>Page20_21_YillikKarsilastirma.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SceneCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SceneCard.Designer.cs">
+      <DependentUpon>SceneCard.cs</DependentUpon>
+    </Compile>
+    <Content Include="iplist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="api">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="commands">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="veri.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scenes">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="UI\IlSecici.resx">
+      <DependentUpon>IlSecici.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page01_BarGrafik.resx">
+      <DependentUpon>Page01_BarGrafik.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page02_BarGrafikPartiler.resx">
+      <DependentUpon>Page02_BarGrafikPartiler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page03_05_PastaVekil.resx">
+      <DependentUpon>Page03_05_PastaVekil.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page04_06_PastaOran.resx">
+      <DependentUpon>Page04_06_PastaOran.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page07_HaritaArtanAzalan.resx">
+      <DependentUpon>Page07_HaritaArtanAzalan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page08_HaritaSehirler.resx">
+      <DependentUpon>Page08_HaritaSehirler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page09_HaritaTrGeneli.resx">
+      <DependentUpon>Page09_HaritaTrGeneli.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page10_MvHaritaArtanAzalan.resx">
+      <DependentUpon>Page10_MvHaritaArtanAzalan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page11_MvHaritaPartiler.resx">
+      <DependentUpon>Page11_MvHaritaPartiler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page12_MvHaritaSehirler.resx">
+      <DependentUpon>Page12_MvHaritaSehirler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page13_MvMeclis.resx">
+      <DependentUpon>Page13_MvMeclis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page14_MvMeclisIttifak.resx">
+      <DependentUpon>Page14_MvMeclisIttifak.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page15_CbYillikKarsilastirma.resx">
+      <DependentUpon>Page15_CbYillikKarsilastirma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page16_IkiliKarsilastirma.resx">
+      <DependentUpon>Page16_IkiliKarsilastirma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page17_MvIkiliKiyaslama.resx">
+      <DependentUpon>Page17_MvIkiliKiyaslama.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page18_MvPartilerIkiSecim.resx">
+      <DependentUpon>Page18_MvPartilerIkiSecim.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page19_MvPartilerIkiSecimBar.resx">
+      <DependentUpon>Page19_MvPartilerIkiSecimBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Page20_21_YillikKarsilastirma.resx">
+      <DependentUpon>Page20_21_YillikKarsilastirma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SceneCard.resx">
+      <DependentUpon>SceneCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

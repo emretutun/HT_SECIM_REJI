@@ -1,0 +1,18 @@
+# Derleme ciktilari
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# NuGet paketleri - packages.config ile geri gelir
+packages/
+
+# Calisma aninda uretilenler
+LOG/
+veri_cache.json
+veri_cache.json.tmp
+
+# Isletim sistemi
+Thumbs.db
+desktop.ini

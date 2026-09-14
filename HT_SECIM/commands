@@ -1,0 +1,218 @@
+//-------------------------------------------------------------
+//  VIZ KOMUT SABLONLARI
+//
+//  Sablonlardaki yer tutucular gonderim aninda doldurulur:
+//    {layer}  -> asagidaki LAYER degeri
+//    {scene}  -> sahnenin tam yolu (scenes dosyasindan)
+//    {in}     -> sahnenin IN director adi
+//    {out}    -> sahnenin OUT director adi
+//
+//  DIKKAT: satirlar "=" ile bolunur, sablon icinde "=" kullanma.
+//-------------------------------------------------------------
+
+//  Layer'lar RENDERER altinda adreslenir.
+//  Alternatifler: RENDERER*FRONT_LAYER   RENDERER*BACK_LAYER
+
+LAYER    = RENDERER*MAIN_LAYER
+
+//-------------------------------------------------------------
+//  SAYAC KEYFRAME'LERI
+//  Sahnelerde Counter degerleri IN director'unde keyframe'li.
+//  Uygulama animasyonun bittigi keyframe'in Value'sunu da yaziyor,
+//  boylece sayac 0'dan bizim sayimiza kadar sayarak cikiyor.
+//  Asagidaki ad, Viz'deki keyframe adidir (varsayilan "End").
+//-------------------------------------------------------------
+
+KEYFRAME_ADI = End
+
+//-------------------------------------------------------------
+//  BAR SINIRLARI
+//
+//  Bar plugin'inin "value" parametresi dogrudan YUZDE:
+//     0   = bos
+//     100 = oylarin tamami, grafigin tepesi
+//  Yani oran ne ise bar degeri odur, ek bir olcekleme yok.
+//
+//  Asagidakiler sadece emniyet siniri. Cok kucuk oranlarda barin
+//  icindeki yuzde yazisi tasiyorsa BAR_MIN'i biraz yukselt.
+//  Plugin -9.4'e kadar iniyor, altinda yazi dibe kaciyor.
+//
+//  Sahneye ozel deger gerekirse: BAR_MIN_<sahne no> / BAR_MAX_<sahne no>
+//-------------------------------------------------------------
+
+BAR_MIN  = 0
+BAR_MAX  = 100
+
+//-------------------------------------------------------------
+//  PASTA GRAFIK SAHNELERINDE SATIR SAYISI
+//
+//  Ittifak ici dagilim sahneleri ayni panelle surulur.
+//  Aralarindaki tek fark kac parti satiri oldugu:
+//     sahne 3 / 4  -> CUMHUR, 4 satir  (SIRA_1..4)
+//     sahne 5 / 6  -> MILLET, 2 satir  (SIRA_1..2)   V2 sahneleri
+//
+//  Panelin hangi ittifakla acilacagi sahne adindan anlasiliyor
+//  (adinda CUMHUR / MILLET / EMEK / ATA geciyor mu), ayar gerekmiyor.
+//  Satir sayisi ise sahneden okunamadigi icin burada tanimli.
+//
+//  Sahnenin satir sayisi degisirse burayi guncelle, kod degistirmeye gerek yok.
+//-------------------------------------------------------------
+
+SLOT     = 4
+SLOT_5   = 2
+SLOT_6   = 2
+
+//-------------------------------------------------------------
+//  YILLIK KARSILASTIRMA SAHNELERI  (20 ve 21)
+//
+//  Tek parti, birkac secim. Ikisi ayni panelle surulur;
+//  aralarindaki tek fark kac bar oldugu ve oran container'larinin adi:
+//     sahne 20 -> 2 bar,  yil1_oran / yil2_oran
+//     sahne 21 -> 3 bar,  oran1 / oran2 / oran3
+//
+//  {n} bar sirasiyla (1, 2, 3) degistirilir.
+//  Sahne tasarimi degisirse burayi guncelle, kod degismez.
+//-------------------------------------------------------------
+
+SLOT_20  = 2
+SLOT_21  = 3
+
+ORAN_ADI_20 = yil{n}_oran
+ORAN_ADI_21 = oran{n}
+
+//-------------------------------------------------------------
+//  ARTAN / AZALAN HARITA SAHNELERI
+//
+//  Bir adayin iki secim arasindaki degisimi 81 il haritasinda
+//  uc renge boyaniyor. Ilin container adi plakasi: $01 ... $81
+//  Her ilin kendi MATERIAL'i var, ayri ayri boyaniyor.
+//
+//  SABIT_ESIK : "degismedi" sayilacak fark siniri.
+//               Oranlar gibi yuzde puani x100 tutuluyor:
+//                  10 = 0,10 puan     50 = 0,50 puan     0 = tam esitlik
+//               Farkin mutlak degeri bu sinirin altindaysa il SABIT sayilir.
+//
+//  Renkler "r;g;b" biciminde, 0-255 yaziliyor. Viz'in material rengi
+//  0-1 araliginda calistigi icin gonderirken uygulama cevirir
+//  (230 -> 0.902). Buraya 0-255 yaz, gerisini dusunme.
+//
+//  Ayni renkler hem 81 ili hem de efsanedeki renk1 / renk2 / renk3
+//  kutucuklarini boyuyor, boylece harita ile efsane hicbir zaman kaymaz.
+//  Asagidaki uc deger sahnenin kendi tasarim renkleridir.
+//
+//  MATERIAL_ALAN : material renginin hangi bileseni yazilacak.
+//                  Viz'de Ambient / Diffuse / Specular / Emission ayri ayri,
+//                  bir de hepsini kapsayan COLOR var. Bu sahnelerin tasarimi
+//                  COLOR kullaniyor. Renk ekranda degismiyorsa DIFFUSE dene.
+//-------------------------------------------------------------
+
+SABIT_ESIK    = 10
+
+MATERIAL_ALAN = COLOR
+
+HARITA_ARTAN  = 230;146;34
+HARITA_AZALAN = 229;178;115
+HARITA_SABIT  = 255;255;255
+
+//-------------------------------------------------------------
+//  PARTI ARTAN / AZALAN HARITASI  (sahne 10)
+//
+//  Aday haritasinda renkler sabit, parti haritasinda ise SECILEN
+//  PARTININ RENGINDEN turetiliyor - parti degisince harita da
+//  onun rengine donuyor.
+//
+//  Partinin veri.json'daki rengi bu carpanlarla olceklenir:
+//     artan  = renk x PARTI_ARTAN_CARPAN     (kendi rengi)
+//     azalan = renk x PARTI_AZALAN_CARPAN    (parlak tonu)
+//     sabit  = PARTI_SABIT (sabit renk, partiden bagimsiz)
+//
+//  Ornek MHP (18;76;190):  artan 18;76;190   azalan 23;99;247
+//  Tonlari degistirmek icin carpanlari oynat, kod degismez.
+//  Ters cevirmek istersen artani buyut azalani kucult.
+//-------------------------------------------------------------
+
+PARTI_ARTAN_CARPAN  = 1.0
+PARTI_AZALAN_CARPAN = 1.3
+PARTI_SABIT         = 255;255;255
+
+//-------------------------------------------------------------
+//  TOPLAM MILLETVEKILI SAYISI
+//  Anayasal olarak sabit. Veriden toplamak yerine buradan
+//  okunuyor: veri eksik gelse bile ekranda dogru sayi kalir.
+//-------------------------------------------------------------
+
+TOPLAM_MV = 600
+
+//-------------------------------------------------------------
+//  HAZIRLA : sahneyi engine'e yukler (ekranda gorunmez)
+//  VER     : yayina alir
+//  AL      : yayindan cikarir
+//  TEMIZLE : layer'i bosaltir
+//-------------------------------------------------------------
+
+//  Bir satirda birden fazla komut: && ile ayir, sirayla gonderilir.
+//
+//  AKIS:
+//    HAZIRLA : sahneyi yukle, kok container'in gozunu KAPAT, sonra verileri yaz
+//    VER     : gozu AC, IN director'unu oynat
+//    AL      : gozu KAPAT, sahneyi motordan dusur
+//
+//  {root} = sahnenin kok container adi (scenes dosyasindaki 7. sutun, yoksa "Object")
+
+//  GIZLE : yayindaki sahnenin verisi tazelenirken degisim ekranda gorunmesin diye
+//          once kok container gizlenir, veri yazilir, sonra VER tekrar acar.
+
+//  GUNCELLE : sahne zaten yayindayken veriyi tazelemek icin.
+//             IN'i bastan oynatmak ekrani goz kirptiriyor; bunun yerine
+//             IN'in altindaki director'ler tek tek oynatiliyor.
+//             {director} her biri icin sirayla doldurulur.
+
+//  GUNCELLE_ATLA : sahne YAYINDAYKEN veri tazelenirken otomatik
+//                  oynatilmayacak director adlari. Bosluk ya da virgulle ayrilir.
+//                  Sahneye ozel liste: GUNCELLE_ATLA_<sahne no>
+//                  Ilk VER'de bunlar yine oynar, orada IN director'u calisiyor.
+//
+//  Sahne 8 (sehir haritasi) icin iki director atlaniyor:
+//
+//    ILLER_GELIS : altinda 81 il director'u var. Ustunu oynatmak 81 ilin
+//                  hepsini ayni anda getirir. Secilen ili sayfa kendisi
+//                  oynatiyor: {layer}*STAGE*DIRECTOR*<plaka> START
+//
+//    HARITA      : haritanin giris animasyonu. Sadece sehir degistirilirken
+//                  tekrar oynatmak butun sahneyi bastan kuruyormus gibi
+//                  gosteriyordu; harita zaten ekranda duruyor.
+
+GUNCELLE_ATLA_8  = ILLER_GELIS HARITA
+GUNCELLE_ATLA_12 = ILLER_GELIS HARITA
+
+//  Sahne 15'te BASLIK director'u basligi, aday adini, fotografi ve yil
+//  etiketlerini birlikte animasyonla getiriyor. Sadece sehir degistirilirken
+//  ayni adayin fotografinin bastan girmesi gereksiz; degerler yine yaziliyor,
+//  sadece animasyon tekrar oynatilmiyor. Barlar (ORAN1 / ORAN2) oynamaya
+//  devam ediyor.
+
+GUNCELLE_ATLA_15 = BASLIK
+
+GUNCELLE = {layer}*STAGE*DIRECTOR*{director} START
+GIZLE    = {layer}*TREE*${root}*ACTIVE SET 0
+HAZIRLA  = {layer} SET_OBJECT SCENE*{scene} && {layer}*TREE*${root}*ACTIVE SET 0
+VER      = {layer}*TREE*${root}*ACTIVE SET 1 && {layer}*STAGE*DIRECTOR*{in} START
+AL       = {layer}*TREE*${root}*ACTIVE SET 0 && {layer} SET_OBJECT
+TEMIZLE  = {layer} SET_OBJECT
+
+//-------------------------------------------------------------
+//  ALTERNATIFLER  (yukaridaki satiri silip bunlardan birini ac)
+//
+//  Sahne yukleme, layer belirtmeden:
+//  HAZIRLA = RENDERER SET_OBJECT SCENE*{scene}
+//
+//  Director'u yuklu sahne uzerinden tetikleme:
+//  VER     = MAIN_SCENE*STAGE*DIRECTOR*{in} START
+//  AL      = MAIN_SCENE*STAGE*DIRECTOR*{in} CONTINUE
+//
+//  Sahnelerde ayri bir OUT director varsa:
+//  AL      = {layer}*STAGE*DIRECTOR*{out} START
+//
+//  Tum stage'i tek seferde oynatma:
+//  VER     = {layer}*STAGE START
+//-------------------------------------------------------------
