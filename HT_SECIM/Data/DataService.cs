@@ -216,6 +216,36 @@ namespace HT_SECIM.Data
             return oy == null ? 0 : oy.Oran;
         }
 
+        /// <summary>
+        /// Bir kalemin iki secim arasindaki il il oran farki (x100).
+        ///
+        /// Sozluge yalnizca HER IKI secimde de kaydi olan iller giriyor.
+        /// Oran() eksik kaydi 0 dondurdugu icin onunla hesaplansaydi, bir
+        /// partinin katilmadigi secim "oyu sifira dusmus" gibi gorunur ve
+        /// il kipkirmizi boyanirdi. Yurtdisi/gumruk ve sonradan kurulan
+        /// iller de bu yuzden disarida kaliyor.
+        /// </summary>
+        public static Dictionary<int, int> Farklar(string yeniKod, string eskiKod, string kalemKod)
+        {
+            Dictionary<int, int> farklar = new Dictionary<int, int>();
+
+            if (string.IsNullOrEmpty(yeniKod) || string.IsNullOrEmpty(eskiKod) ||
+                string.IsNullOrEmpty(kalemKod) || yeniKod == eskiKod)
+                return farklar;
+
+            foreach (Il il in Veri.Iller)
+            {
+                Oy yeni = OyBul(yeniKod, il.Plaka, kalemKod);
+                Oy eski = OyBul(eskiKod, il.Plaka, kalemKod);
+
+                if (yeni == null || eski == null) continue;
+
+                farklar[il.Plaka] = yeni.Oran - eski.Oran;
+            }
+
+            return farklar;
+        }
+
         /// <summary> Milletvekili sayisi. Kayit yoksa 0. </summary>
         public static int Vekil(string secimKod, int plaka, string kod)
         {

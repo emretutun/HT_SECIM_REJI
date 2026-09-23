@@ -6,3 +6,28 @@
 ENGINE = LOCAL      = 127.0.0.1 = 6100
 ENGINE = ENGINE 1   = 127.0.0.1 = 6100
 ENGINE = ENGINE 2   = 127.0.0.1 = 6100
+
+//-------------------------------------------------------------
+//  BAGLANTI DAVRANISI
+//
+//  OTOMATIK_BAGLAN (AC) : uygulama acilir acilmaz listedeki secili
+//                         engine'e baglanir, baglanti koparsa
+//                         yeniden dener.
+//
+//  NABIZ (HB)           : baglanti belirli araliklarla yoklanir.
+//                         TCP baglantisi karsi taraf sessizce
+//                         olduğunde "bagli" gorunmeye devam
+//                         edebiliyor; soket acik ama motor cevap
+//                         vermiyorsa uygulama komut gonderdigini
+//                         sanip ekrani dondurur. Kucuk bir sorgu
+//                         bunu ortaya cikarir ve baglanti tazelenir.
+//
+//  NABIZ_ARALIK         : yoklama araligi, saniye. En az 3.
+//
+//  Yayin makinesinde IKISI DE ACIK olmali.
+//  Arayuzdeki AC / HB kutulari bu degerlerle aciliyor.
+//-------------------------------------------------------------
+
+OTOMATIK_BAGLAN = 1
+NABIZ           = 1
+NABIZ_ARALIK    = 10

@@ -21,16 +21,43 @@ namespace HT_SECIM.Core
 
         public static List<EngineInfo> Engines = new List<EngineInfo>();
 
+        /// <summary> Uygulama acilir acilmaz secili engine'e baglanilsin mi (AC). </summary>
+        public static bool OtomatikBaglan { private set; get; }
+
+        /// <summary> Baglanti belirli araliklarla yoklansin mi (HB). </summary>
+        public static bool Nabiz { private set; get; }
+
+        /// <summary> Nabiz yoklamasinin araligi, saniye. </summary>
+        public static int NabizAralik { private set; get; }
+
         public static void Load()
         {
             Engines.Clear();
+
+            OtomatikBaglan = false;
+            Nabiz          = false;
+            NabizAralik    = 10;
 
             List<string[]> lines = ConfigReader.ReadLines(ConfigPaths.IpListFile);
 
             foreach (string[] p in lines)
             {
+                string anahtar = p[0].ToUpperInvariant();
+
+                if (anahtar == "OTOMATIK_BAGLAN") { OtomatikBaglan = (p[1].Trim() == "1"); continue; }
+                if (anahtar == "NABIZ")           { Nabiz          = (p[1].Trim() == "1"); continue; }
+
+                if (anahtar == "NABIZ_ARALIK")
+                {
+                    // 3 saniyenin altina inilmiyor: daha sik yoklamanin
+                    // faydasi yok, her tik motora bir sorgu demek.
+                    int sn = SafeInt(p[1].Trim(), NabizAralik);
+                    NabizAralik = sn < 3 ? 3 : sn;
+                    continue;
+                }
+
                 // ENGINE = ad = ip = port
-                if (p[0].ToUpperInvariant() != "ENGINE") continue;
+                if (anahtar != "ENGINE") continue;
                 if (p.Length < 3) continue;
 
                 EngineInfo e = new EngineInfo();

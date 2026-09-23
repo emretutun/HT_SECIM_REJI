@@ -152,7 +152,29 @@ namespace HT_SECIM.UI
 
             yukleniyor = false;
 
+            FarklariYenile();
             VeridenDoldur();
+        }
+
+        /// <summary>
+        /// Il listesini ILK IKI secim arasindaki degisime gore renklendirir.
+        /// Sahne 21'de ucuncu bir secim daha var ama liste tek renge
+        /// boyanabiliyor; olcu en ustteki iki yil.
+        /// </summary>
+        private void FarklariYenile()
+        {
+            Parti parti = SeciliParti;
+
+            Secim secim1 = (secimKutulari.Length > 0) ? secimKutulari[0].SelectedItem as Secim : null;
+            Secim secim2 = (secimKutulari.Length > 1) ? secimKutulari[1].SelectedItem as Secim : null;
+
+            if (parti == null || secim1 == null || secim2 == null)
+            {
+                ilSecici1.FarklariTemizle();
+                return;
+            }
+
+            ilSecici1.FarklariGoster(DataService.Farklar(secim1.Kod, secim2.Kod, parti.Kod));
         }
 
         #endregion
@@ -290,6 +312,8 @@ namespace HT_SECIM.UI
         private void Secim_Degisti(object sender, EventArgs e)
         {
             if (yukleniyor) return;
+
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -301,6 +325,9 @@ namespace HT_SECIM.UI
 
         private void Doldur_Click(object sender, EventArgs e)
         {
+            // Yeni veri geldiginde basilan dugme bu; il listesindeki farklar
+            // da tazelenmeli, yoksa oranlar guncellenirken renkler eski kalir.
+            FarklariYenile();
             VeridenDoldur();
         }
 

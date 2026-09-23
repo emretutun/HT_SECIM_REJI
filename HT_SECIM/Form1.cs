@@ -100,14 +100,21 @@ namespace HT_SECIM
             KlavyeyiKur();
             VeriKaynaginiKur();
 
+            chk_ac.CheckedChanged += NabizKutulari_Degisti;
+            chk_hb.CheckedChanged += NabizKutulari_Degisti;
+
             // Acilista listedeki ilk sahne secili gelsin.
             if (cards.Count > 0) Card_OnCardClicked(cards[0]);
             else UpdateHead();
+
+            // En sona: NabziKur kutulari isaretleyip gerekiyorsa baglaniyor.
+            NabziKur();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             logZamanlayici.Stop();
+            NabziDurdur();
             VeriKaynagi.Durdur();
 
             engine.Disconnect();
@@ -866,6 +873,9 @@ namespace HT_SECIM
         {
             EngineInfo info = cmb_engine.SelectedItem as EngineInfo;
             if (info != null) txt_ip.Text = info.IP;
+
+            // Nabiz thread'i ComboBox'a erisemez; secim alanda tutuluyor.
+            seciliEngine = info;
         }
 
         private void btn_connect_Click(object sender, EventArgs e)
@@ -891,15 +901,159 @@ namespace HT_SECIM
             UpdateConnectionUI();
         }
 
+        /// <summary>
+        /// Baglanti kurulunca: istenmisse secili sahneyi motora yukler.
+        ///
+        /// MAIN_LAYER'a ayni anda TEK sahne yuklenebildigi icin "hangi
+        /// sahne" sorusunun tek makul cevabi operatorun sectigi karttir.
+        /// Sahne yalnizca HAZIRLANIR, yayina verilmez - ekranda bir sey
+        /// gorunmez, kart yesile doner.
+        ///
+        /// Zaten yayindaki bir kart varsa dokunulmuyor: baglanti yayin
+        /// sirasinda tazelenirse ekrandaki grafik sifirlanmasin.
+        /// </summary>
         private void Engine_OnConnected(VizEngine en)
         {
-            SafeInvoke(UpdateConnectionUI);
+            SafeInvoke(delegate
+            {
+                UpdateConnectionUI();
+
+                if (!CommandRepository.BaglanincaHazirla) return;
+                if (selectedCard == null) return;
+                if (onAirCard != null) return;
+                if (selectedCard.State != SceneState.Bos) return;
+
+                CLog.Log("BAGLANINCA HAZIRLA", selectedCard.Scene.Name);
+                PrepareCard(selectedCard);
+            });
         }
 
         private void Engine_OnDisconnected(VizEngine en)
         {
             SafeInvoke(UpdateConnectionUI);
         }
+
+        #region Otomatik baglanti ve nabiz
+
+        /// <summary>
+        /// Nabiz zamanlayicisi ARKA PLANDA calisiyor.
+        ///
+        /// Yoklama komutu cevap beklediginden UI thread'inde olsaydi
+        /// baglanti koptugunda arayuz zaman asimi boyunca donardi.
+        /// </summary>
+        private System.Threading.Timer nabizZamanlayici;
+        private volatile bool nabizCalisiyor;
+        private int nabizMesgul;
+
+        /// <summary> Arka plandaki nabiz thread'inin okudugu secili engine. </summary>
+        private volatile EngineInfo seciliEngine;
+
+        private void NabziKur()
+        {
+            chk_ac.Checked = EngineRepository.OtomatikBaglan;
+            chk_hb.Checked = EngineRepository.Nabiz;
+
+            // Kutu zaten o degerdeyse CheckedChanged tetiklenmez; alanlar
+            // burada da doldurulyor ki olay sirasina bagli kalmasin.
+            nabizAcOtomatik = chk_ac.Checked;
+            nabizHbAcik     = chk_hb.Checked;
+
+            seciliEngine = cmb_engine.SelectedItem as EngineInfo;
+
+            nabizCalisiyor = true;
+
+            int ms = Math.Max(3, EngineRepository.NabizAralik) * 1000;
+            nabizZamanlayici = new System.Threading.Timer(NabizTik, null, ms, ms);
+
+            CLog.Log("NABIZ KURULDU", EngineRepository.NabizAralik + " sn");
+
+            // AC isaretliyse ilk tiki beklemeden baglaniliyor.
+            if (chk_ac.Checked) OtomatikBaglan();
+        }
+
+        private void NabziDurdur()
+        {
+            nabizCalisiyor = false;
+            if (nabizZamanlayici != null) nabizZamanlayici.Dispose();
+        }
+
+        /// <summary>
+        /// Her tik iki is yapiyor:
+        ///
+        ///   AC acik ve bagli degilsek  -> baglanmayi dener.
+        ///   HB acik ve bagliysak       -> hatti yoklar.
+        ///
+        /// Yoklama neden gerekli: TCP baglantisi karsi taraf sessizce
+        /// olduğunde "bagli" gorunmeye devam edebiliyor. Soket acik ama
+        /// motor cevap vermiyorsa uygulama komut gonderdigini sanip
+        /// ekrani dondurur. Kucuk bir GET bunu ortaya cikariyor.
+        /// </summary>
+        private void NabizTik(object durum)
+        {
+            if (!nabizCalisiyor) return;
+
+            // Onceki tik hala surerse bu tik atlaniyor.
+            if (System.Threading.Interlocked.Exchange(ref nabizMesgul, 1) == 1) return;
+
+            try
+            {
+                if (!engine.isConnected)
+                {
+                    if (nabizAcOtomatik) OtomatikBaglan();
+                    return;
+                }
+
+                if (!nabizHbAcik) return;
+
+                // Yan etkisi olmayan, birkac baytlik bir sorgu.
+                if (engine.SendAndWait("VERSION GET", 4000) != null) return;
+
+                CLog.Error("NABIZ ALINAMADI", "engine cevap vermiyor, baglanti kapatiliyor");
+
+                engine.Disconnect();
+                if (nabizAcOtomatik) OtomatikBaglan();
+            }
+            catch (Exception ex)
+            {
+                CLog.Error("NABIZ HATASI", ex.Message);
+            }
+            finally
+            {
+                System.Threading.Interlocked.Exchange(ref nabizMesgul, 0);
+            }
+        }
+
+        /// <summary>
+        /// Kutu durumlari arka plan thread'inden okunacagi icin alanda
+        /// tutuluyor; Control.Checked'e baska thread'den erisilemez.
+        /// </summary>
+        private volatile bool nabizAcOtomatik;
+        private volatile bool nabizHbAcik;
+
+        private void NabizKutulari_Degisti(object sender, EventArgs e)
+        {
+            nabizAcOtomatik = chk_ac.Checked;
+            nabizHbAcik     = chk_hb.Checked;
+
+            CLog.Log("BAGLANTI SECENEGI",
+                "AC " + (nabizAcOtomatik ? "açık" : "kapalı") +
+                " / HB " + (nabizHbAcik ? "açık" : "kapalı"));
+        }
+
+        /// <summary>
+        /// Listedeki secili engine'e baglanmayi dener.
+        /// VizClient BeginConnect kullandigi icin bloklamiyor.
+        /// </summary>
+        private void OtomatikBaglan()
+        {
+            EngineInfo secili = seciliEngine;
+            if (secili == null) return;
+
+            CLog.Log("OTOMATIK BAGLANTI", secili.IP + ":" + secili.Port);
+            engine.Connect(secili);
+        }
+
+        #endregion
 
         private void UpdateConnectionUI()
         {

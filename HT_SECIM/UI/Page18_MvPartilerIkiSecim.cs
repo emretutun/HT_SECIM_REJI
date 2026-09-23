@@ -81,6 +81,7 @@ namespace HT_SECIM.UI
 
             yukleniyor = false;
 
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -231,6 +232,26 @@ namespace HT_SECIM.UI
             yukleniyor = false;
         }
 
+        /// <summary>
+        /// Il listesini SOLDAKI partinin iki secim arasindaki degisimine
+        /// gore renklendirir. Sagdaki parti de ayni yillarla gosteriliyor
+        /// ama liste tek bir renge boyanabildigi icin olcu birincisi.
+        /// </summary>
+        private void FarklariYenile()
+        {
+            Secim yil1 = SeciliSecim1;
+            Secim yil2 = SeciliSecim2;
+            Parti parti1 = SeciliParti1;
+
+            if (yil1 == null || yil2 == null || parti1 == null)
+            {
+                ilSecici1.FarklariTemizle();
+                return;
+            }
+
+            ilSecici1.FarklariGoster(DataService.Farklar(yil1.Kod, yil2.Kod, parti1.Kod));
+        }
+
         private void YenidenBicimle()
         {
             int basamak = Ondalik;
@@ -258,6 +279,8 @@ namespace HT_SECIM.UI
         private void Secim_Degisti(object sender, EventArgs e)
         {
             if (yukleniyor) return;
+
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -269,6 +292,9 @@ namespace HT_SECIM.UI
 
         private void Doldur_Click(object sender, EventArgs e)
         {
+            // Yeni veri geldiginde basilan dugme bu; il listesindeki farklar
+            // da tazelenmeli, yoksa oranlar guncellenirken renkler eski kalir.
+            FarklariYenile();
             VeridenDoldur();
         }
 

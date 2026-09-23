@@ -64,6 +64,7 @@
     <Compile Include="Core\EngineRepository.cs" />
     <Compile Include="Core\SceneRepository.cs" />
     <Compile Include="Core\Tema.cs" />
+    <Compile Include="Core\FarkRenk.cs" />
     <Compile Include="Core\ApiAyarlari.cs" />
     <Compile Include="Core\VeriKaynagi.cs" />
     <Compile Include="Core\VizClient.cs" />

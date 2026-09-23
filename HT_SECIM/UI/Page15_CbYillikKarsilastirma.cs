@@ -74,6 +74,7 @@ namespace HT_SECIM.UI
 
             yukleniyor = false;
 
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -238,6 +239,27 @@ namespace HT_SECIM.UI
             yukleniyor = false;
         }
 
+        /// <summary>
+        /// Il listesindeki renkleri ve FARK sutununu tazeler.
+        ///
+        /// Yalnizca secim ya da aday degisince cagriliyor; il secmek
+        /// farklari degistirmiyor.
+        /// </summary>
+        private void FarklariYenile()
+        {
+            Secim yeni = SeciliYeni;
+            Secim eski = SeciliEski;
+            Aday aday = SeciliAday;
+
+            if (yeni == null || eski == null || aday == null)
+            {
+                ilSecici1.FarklariTemizle();
+                return;
+            }
+
+            ilSecici1.FarklariGoster(DataService.Farklar(yeni.Kod, eski.Kod, aday.Kod));
+        }
+
         private void YenidenBicimle()
         {
             int basamak = Ondalik;
@@ -268,12 +290,15 @@ namespace HT_SECIM.UI
             AdaylariYukle();       // secim degisti, ortak aday listesi de degisebilir
             yukleniyor = false;
 
+            FarklariYenile();
             VeridenDoldur();
         }
 
         private void Aday_Degisti(object sender, EventArgs e)
         {
             if (yukleniyor) return;
+
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -285,6 +310,9 @@ namespace HT_SECIM.UI
 
         private void Doldur_Click(object sender, EventArgs e)
         {
+            // Yeni veri geldiginde basilan dugme bu; il listesindeki farklar
+            // da tazelenmeli, yoksa oranlar guncellenirken renkler eski kalir.
+            FarklariYenile();
             VeridenDoldur();
         }
 

@@ -32,6 +32,7 @@
             this.lst_iller = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // pnl_gruplar
@@ -51,12 +52,13 @@
             // 
             this.lst_iller.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
-            this.columnHeader2});
+            this.columnHeader2,
+            this.columnHeader3});
             this.lst_iller.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lst_iller.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lst_iller.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.lst_iller.FullRowSelect = true;
             this.lst_iller.GridLines = true;
-            this.lst_iller.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lst_iller.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
             this.lst_iller.HideSelection = false;
             this.lst_iller.Location = new System.Drawing.Point(130, 0);
             this.lst_iller.MultiSelect = false;
@@ -69,13 +71,19 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "PLK";
-            this.columnHeader1.Width = 45;
+            this.columnHeader1.Width = 40;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "İL";
-            this.columnHeader2.Width = 220;
-            // 
+            this.columnHeader2.Width = 150;
+            //
+            // columnHeader3
+            //
+            this.columnHeader3.Text = "FARK";
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader3.Width = 70;
+            //
             // IlSecici
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -94,5 +102,6 @@
         private System.Windows.Forms.ListView lst_iller;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }

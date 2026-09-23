@@ -16,8 +16,21 @@ namespace HT_SECIM.Core
         public const string AL      = "AL";
         public const string TEMIZLE = "TEMIZLE";
 
-        /// <summary> Sahnelerin yuklendigi katman: MAIN_LAYER / FRONT_LAYER / BACK_LAYER </summary>
+        /// <summary>
+        /// Sahnelerin yuklendigi katman: MAIN_LAYER / FRONT_LAYER / BACK_LAYER
+        ///
+        /// Reji MAIN katmanini, C ekrani uygulamasi FRONT katmanini kullaniyor.
+        /// Bir katmanda ayni anda tek sahne durabildigi icin ikisi ayni
+        /// katmanda olsaydi biri digerini motordan dusururdu.
+        /// </summary>
         public static string Layer { private set; get; }
+
+        /// <summary>
+        /// Engine'e baglanildiginda secili sahne kartinin HAZIRLA adimi
+        /// kendiliginden calissin mi. Sahne yalnizca hazirlanir, yayina
+        /// verilmez.
+        /// </summary>
+        public static bool BaglanincaHazirla { private set; get; }
 
         private static readonly Dictionary<string, string> templates =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -26,6 +39,7 @@ namespace HT_SECIM.Core
         {
             templates.Clear();
             Layer = "MAIN_LAYER";
+            BaglanincaHazirla = false;
 
             foreach (string[] p in ConfigReader.ReadLines(ConfigPaths.CommandsFile))
             {
@@ -36,6 +50,12 @@ namespace HT_SECIM.Core
                 if (string.Equals(key, "LAYER", StringComparison.OrdinalIgnoreCase))
                 {
                     if (p[1].Length > 0) Layer = p[1];
+                    continue;
+                }
+
+                if (string.Equals(key, "BAGLANINCA_HAZIRLA", StringComparison.OrdinalIgnoreCase))
+                {
+                    BaglanincaHazirla = (p[1].Trim() == "1");
                     continue;
                 }
 

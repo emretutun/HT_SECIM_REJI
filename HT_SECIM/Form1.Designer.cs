@@ -32,6 +32,8 @@
             this.lbl_status = new System.Windows.Forms.Label();
             this.lbl_veri = new System.Windows.Forms.Label();
             this.cmb_engine = new System.Windows.Forms.ComboBox();
+            this.chk_ac = new System.Windows.Forms.CheckBox();
+            this.chk_hb = new System.Windows.Forms.CheckBox();
             this.btn_connect = new System.Windows.Forms.Button();
             this.txt_ip = new System.Windows.Forms.TextBox();
             this.lbl_onair = new System.Windows.Forms.Label();
@@ -62,6 +64,8 @@
             // 
             this.pnl_top.BackColor = System.Drawing.Color.Silver;
             this.pnl_top.Controls.Add(this.lbl_veri);
+            this.pnl_top.Controls.Add(this.chk_hb);
+            this.pnl_top.Controls.Add(this.chk_ac);
             this.pnl_top.Controls.Add(this.lbl_status);
             this.pnl_top.Controls.Add(this.cmb_engine);
             this.pnl_top.Controls.Add(this.btn_connect);
@@ -85,6 +89,28 @@
             this.lbl_status.Tag = "TEMA_DISI";
             this.lbl_status.Text = "BAGLI DEGIL";
             this.lbl_status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // chk_ac
+            // 
+            this.chk_ac.AutoSize = true;
+            this.chk_ac.Font = new System.Drawing.Font("Arial", 9.75F);
+            this.chk_ac.Location = new System.Drawing.Point(1212, 14);
+            this.chk_ac.Name = "chk_ac";
+            this.chk_ac.Size = new System.Drawing.Size(150, 17);
+            this.chk_ac.TabIndex = 5;
+            this.chk_ac.Text = "AC  otomatik bağlan";
+            this.chk_ac.UseVisualStyleBackColor = true;
+            // 
+            // chk_hb
+            // 
+            this.chk_hb.AutoSize = true;
+            this.chk_hb.Font = new System.Drawing.Font("Arial", 9.75F);
+            this.chk_hb.Location = new System.Drawing.Point(1212, 36);
+            this.chk_hb.Name = "chk_hb";
+            this.chk_hb.Size = new System.Drawing.Size(150, 17);
+            this.chk_hb.TabIndex = 6;
+            this.chk_hb.Text = "HB  nabız";
+            this.chk_hb.UseVisualStyleBackColor = true;
             //
             // lbl_veri
             //
@@ -376,6 +402,8 @@
         private System.Windows.Forms.Label lbl_status;
         private System.Windows.Forms.Label lbl_veri;
         private System.Windows.Forms.ComboBox cmb_engine;
+        private System.Windows.Forms.CheckBox chk_ac;
+        private System.Windows.Forms.CheckBox chk_hb;
         private System.Windows.Forms.Panel pnl_cmd;
         private System.Windows.Forms.Button btn_send;
         private System.Windows.Forms.TextBox txt_command;

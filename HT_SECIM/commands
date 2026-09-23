@@ -12,8 +12,31 @@
 
 //  Layer'lar RENDERER altinda adreslenir.
 //  Alternatifler: RENDERER*FRONT_LAYER   RENDERER*BACK_LAYER
+//
+//  REJI MAIN, C EKRANI FRONT KATMANINDA. Ikisi ayni motorda
+//  calisiyor ve bir katmanda ayni anda tek sahne durabiliyor;
+//  ayni katmanda olsalardi biri digerini motordan dusururdu.
+//  Bu satiri degistirirken C ekraninin "sahne" dosyasina da bakin.
 
 LAYER    = RENDERER*MAIN_LAYER
+
+//-------------------------------------------------------------
+//  BAGLANINCA_HAZIRLA
+//
+//  1 yapilirsa engine'e baglanildigi anda, o sirada SECILI olan
+//  sahne kartinin HAZIRLA adimi kendiliginden calisir: sahne
+//  motora yuklenir, stage okunur ve verisi yazilir.
+//
+//  Sahne yalnizca HAZIRLANIR, YAYINA VERILMEZ - ekranda hicbir
+//  sey gorunmez, kart yesile doner ve VER'e basmaya hazir olur.
+//
+//  Reji uygulamasinda 21 sahne var ve MAIN_LAYER'a ayni anda tek
+//  sahne yuklenebiliyor; o yuzden "hangi sahne" sorusunun tek
+//  cevabi operatorun sectigi karttir. Hicbir kart secili degilse
+//  hicbir sey yapilmaz.
+//-------------------------------------------------------------
+
+BAGLANINCA_HAZIRLA = 1
 
 //-------------------------------------------------------------
 //  SAYAC KEYFRAME'LERI
@@ -216,3 +239,26 @@ TEMIZLE  = {layer} SET_OBJECT
 //  Tum stage'i tek seferde oynatma:
 //  VER     = {layer}*STAGE START
 //-------------------------------------------------------------
+
+//-------------------------------------------------------------
+//  IL LISTESI RENKLERI  (operator ekrani)
+//
+//  Karsilastirma sayfalarinda soldaki il listesi de boyaniyor:
+//  oyu artan il yesil, azalan kirmizi, ne kadar degismisse o kadar
+//  koyu. Yanindaki FARK sutunu sayiyi da yaziyor.
+//
+//  Ton, o karsilastirmanin EN BUYUK farkina gore olcekleniyor -
+//  sabit bir tavan koyulmuyor, cunku ayni adayin 2023/2018 farki en
+//  cok ~30 puan iken 2023/2015 farki ~43 puana cikiyor; sabit tavanda
+//  ustteki butun iller ayni koyulukta gorunurdu.
+//
+//  SABIT_ESIK yukaridaki ile ayni: farki bunun altinda kalan il
+//  beyaz kaliyor. Harita ile liste boylece hic celismiyor.
+//
+//  FARK_TABAN : olcegin inebilecegi en kucuk deger (x100).
+//               Hicbir ilin kayda deger degismedigi bir karsilastirmada
+//               en buyuk fark 0,30 puan olsa bile iller kapkara
+//               boyanmasin diye var. 500 = 5,00 puan.
+//-------------------------------------------------------------
+
+FARK_TABAN = 500

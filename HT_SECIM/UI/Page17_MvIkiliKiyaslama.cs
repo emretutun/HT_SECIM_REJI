@@ -81,7 +81,35 @@ namespace HT_SECIM.UI
 
             yukleniyor = false;
 
+            FarklariYenile();
             VeridenDoldur();
+        }
+
+        /// <summary>
+        /// Il listesi yalnizca IKI TARAF AYNI PARTIYSE renklenir.
+        ///
+        /// Bu sayfada her iki taraf kendi partisini ve kendi secimini
+        /// seciyor; "AK PARTİ 2023 vs CHP 2023" de kurulabiliyor. Oradaki
+        /// fark bir artis ya da azalis degil, iki ayri partinin farki -
+        /// yesil/kirmizi boyamak operatoru yaniltirdi. Ayni parti iki
+        /// secimde kiyaslaniyorsa fark gercekten zaman icindeki degisimdir.
+        /// </summary>
+        private void FarklariYenile()
+        {
+            Secim secim1 = SeciliSecim1;
+            Secim secim2 = SeciliSecim2;
+            Parti parti1 = SeciliParti1;
+            Parti parti2 = SeciliParti2;
+
+            bool ayniParti = (parti1 != null && parti2 != null && parti1.Kod == parti2.Kod);
+
+            if (secim1 == null || secim2 == null || !ayniParti)
+            {
+                ilSecici1.FarklariTemizle();
+                return;
+            }
+
+            ilSecici1.FarklariGoster(DataService.Farklar(secim1.Kod, secim2.Kod, parti1.Kod));
         }
 
         /// <summary> Parti listesi; toplu kalemler ("DIGER") disarida. </summary>
@@ -265,6 +293,8 @@ namespace HT_SECIM.UI
         private void Secim_Degisti(object sender, EventArgs e)
         {
             if (yukleniyor) return;
+
+            FarklariYenile();
             VeridenDoldur();
         }
 
@@ -276,6 +306,9 @@ namespace HT_SECIM.UI
 
         private void Doldur_Click(object sender, EventArgs e)
         {
+            // Yeni veri geldiginde basilan dugme bu; il listesindeki farklar
+            // da tazelenmeli, yoksa oranlar guncellenirken renkler eski kalir.
+            FarklariYenile();
             VeridenDoldur();
         }
 
