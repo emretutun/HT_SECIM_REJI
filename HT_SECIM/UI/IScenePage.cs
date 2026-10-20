@@ -23,6 +23,12 @@ namespace HT_SECIM.UI
         void SayfaAcildi();
 
         /// <summary>
+        /// API'den yeni veri geldi. Kurulmus sayfa kutularini secili il /
+        /// secim setine gore veriden yeniden doldurur; yayina VER ile gider.
+        /// </summary>
+        void VeriYenilendi();
+
+        /// <summary>
         /// HAZIRLA'da, sahne motora yeni yuklendikten hemen sonra cagrilir.
         /// Sahne o anda tasarim halinde oldugu icin sayfanin "sunu zaten yazmistim"
         /// diye tuttugu bilgiler gecersizdir; burada birakilir.

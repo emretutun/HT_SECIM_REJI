@@ -16,3 +16,5 @@ veri_cache.json.tmp
 # Isletim sistemi
 Thumbs.db
 desktop.ini
+
+.claude/settings.local.json

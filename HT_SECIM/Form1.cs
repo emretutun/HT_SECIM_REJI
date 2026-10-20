@@ -157,6 +157,8 @@ namespace HT_SECIM
             VeriKaynagi.OnYeniVeri += VeriKaynagi_OnYeniVeri;
             VeriKaynagi.OnDurum    += VeriKaynagi_OnDurum;
 
+            UyariyiKur();
+
             VeriKaynagi.Baslat();
             VeriGostergesiniTazele();
         }
@@ -172,9 +174,89 @@ namespace HT_SECIM
             {
                 DataService.Uygula(veri);
 
+                SayfalariVeridenTazele();
+
                 yeniVeriVar = true;
                 VeriGostergesiniTazele();
             });
+        }
+
+        /// <summary>
+        /// Olusturulmus butun sayfalarin kutularini yeni veriyle doldurur.
+        /// Sadece arayuz tazelenir; yayindaki grafik VER'e basilana kadar
+        /// eski degerlerle kalir.
+        /// </summary>
+        private void SayfalariVeridenTazele()
+        {
+            foreach (UserControl page in pages.Values)
+            {
+                IScenePage sp = page as IScenePage;
+                if (sp == null) continue;
+
+                try
+                {
+                    sp.VeriYenilendi();
+                    yayinaGitmeyen.Add(sp.Scene.No);
+                }
+                catch (Exception ex)
+                {
+                    CLog.Error("SAYFA TAZELENEMEDI", sp.Scene.Name + " | " + ex.Message);
+                }
+            }
+
+            CLog.Log("SAYFALAR VERIDEN TAZELENDI", pages.Count + " sayfa");
+
+            UyariyiTazele();
+        }
+
+        /// <summary>
+        /// Kutulari yeni veriyle tazelenmis ama VER'e henuz basilmamis
+        /// sahneler. Yayindaki grafik bunlarda hala eski degerleri gosteriyor.
+        /// </summary>
+        private readonly HashSet<int> yayinaGitmeyen = new HashSet<int>();
+
+        private Label lbl_veri_uyari;
+
+        /// <summary> Sayfa alaninin ustunde, yeni veri VER'i bekliyorsa gorunen serit. </summary>
+        private void UyariyiKur()
+        {
+            lbl_veri_uyari = new Label();
+
+            lbl_veri_uyari.Text      = "VERİ GÜNCELLENDİ  —  Yeni verileri yayına basmak için tekrar VER'e basınız.";
+            lbl_veri_uyari.Dock      = DockStyle.Top;
+            lbl_veri_uyari.Height    = 34;
+            lbl_veri_uyari.Font      = Tema.Yazi(11F, FontStyle.Bold);
+            lbl_veri_uyari.BackColor = Tema.Hazir;
+            lbl_veri_uyari.ForeColor = Color.Black;
+            lbl_veri_uyari.TextAlign = ContentAlignment.MiddleCenter;
+            lbl_veri_uyari.Cursor    = Cursors.Hand;
+            lbl_veri_uyari.Tag       = Tema.DISI;
+            lbl_veri_uyari.Visible   = false;
+
+            headTip.SetToolTip(lbl_veri_uyari, "Tıklayınca uyarı kapanır");
+
+            // Reji yeni degeri yayina vermek istemiyorsa uyariyi elle kapatabilsin.
+            lbl_veri_uyari.Click += delegate
+            {
+                if (selectedCard != null) yayinaGitmeyen.Remove(selectedCard.Scene.No);
+                UyariyiTazele();
+            };
+
+            pnl_page.Controls.Add(lbl_veri_uyari);
+        }
+
+        /// <summary> Secili sahne yeni veriyi henuz yayina vermediyse uyari gorunur. </summary>
+        private void UyariyiTazele()
+        {
+            if (lbl_veri_uyari == null) return;
+
+            bool goster = selectedCard != null && yayinaGitmeyen.Contains(selectedCard.Scene.No);
+
+            lbl_veri_uyari.Visible = goster;
+
+            // Dock sirasi z-sirasinin tersi: serit en arkada olmali ki
+            // Fill sayfa onun altindaki alani kaplasin, ustune binmesin.
+            if (goster) lbl_veri_uyari.SendToBack();
         }
 
         private void VeriKaynagi_OnDurum(KaynakDurumu durum, string aciklama)
@@ -188,10 +270,9 @@ namespace HT_SECIM
         /// <summary>
         /// Ust seritteki veri gostergesi.
         ///
-        /// Yeni veri geldiginde sayfalar KENDILIGINDEN tazelenmiyor: reji
-        /// oranlari elle duzeltmis olabilir, yayindaki ekran kendiliginden
-        /// oynamamali. Gosterge yanar, reji hazir oldugunda VERIDEN DOLDUR'a
-        /// basar, sonra VER ile yayina yansitir.
+        /// Yeni veri geldiginde sayfalardaki kutular kendiliginden tazeleniyor
+        /// ama yayindaki ekran oynamiyor. Gosterge yanar, reji VER ile yeni
+        /// degerleri yayina yansitir.
         /// </summary>
         private void VeriGostergesiniTazele()
         {
@@ -239,7 +320,7 @@ namespace HT_SECIM
             IScenePage sayfa = GetPage(selectedCard.Scene) as IScenePage;
             if (sayfa == null) return;
 
-            sayfa.SayfaAcildi();
+            sayfa.VeriYenilendi();
 
             yeniVeriVar = false;
             VeriGostergesiniTazele();
@@ -587,7 +668,11 @@ namespace HT_SECIM
                 commander.Guncelle(card.Scene, VeriKomutlari(card.Scene));
             }
 
+            // Kutulardaki yeni degerler artik yayinda.
+            yayinaGitmeyen.Remove(card.Scene.No);
+
             SetOnAir(card);
+            UyariyiTazele();
         }
 
         /// <summary> Karttaki AL -> sahne yayindan cikarilir, bellekte hazir kalir </summary>
@@ -783,6 +868,8 @@ namespace HT_SECIM
                 IScenePage sp = page as IScenePage;
                 if (sp != null) sp.SayfaAcildi();
             }
+
+            UyariyiTazele();
 
             pnl_page.ResumeLayout();
         }

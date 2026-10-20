@@ -130,6 +130,14 @@ namespace HT_SECIM.UI
             Kur();
         }
 
+        /// <summary> Yeni veri geldi: kutular veriden tazelenir. Henuz acilmamis sayfa ilk acilista zaten dolacak. </summary>
+        public void VeriYenilendi()
+        {
+            if (!kuruldu) return;
+
+            Doldur_Click(this, EventArgs.Empty);
+        }
+
         /// <summary> Bu sayfa komut elemek icin durum tutmuyor; yapacak sey yok. </summary>
         public void Sifirla()
         {

@@ -152,6 +152,14 @@ namespace HT_SECIM.UI
             Kur();
         }
 
+        /// <summary> Yeni veri geldi: kutular veriden tazelenir. Henuz acilmamis sayfa ilk acilista zaten dolacak. </summary>
+        public void VeriYenilendi()
+        {
+            if (!kuruldu) return;
+
+            Doldur_Click(this, EventArgs.Empty);
+        }
+
         /// <summary> Sahne bastan yuklendi, harita da tasarim halinde geldi. </summary>
         public void Sifirla()
         {
