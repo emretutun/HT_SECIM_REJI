@@ -26,6 +26,9 @@ ANAHTAR = HT-SECIM-OKUMA-2027
 
 //-------------------------------------------------------------
 //  ARALIK      : kac saniyede bir surum sorulacak
+//  YENIDEN_DENE: API'ye ulasilamazken kac saniyede bir yeniden
+//                baglanmaya calisilacak. API geri gelince ARALIK'a
+//                donulur.
 //  ZAMANASIMI  : tek bir istek en fazla kac saniye beklenecek
 //
 //  Surum numarasi degismediyse hicbir sey indirilmez; sorgu
@@ -36,5 +39,6 @@ ANAHTAR = HT-SECIM-OKUMA-2027
 //  dakikalar icinde degisiyor.
 //-------------------------------------------------------------
 
-ARALIK     = 25
-ZAMANASIMI = 15
+ARALIK       = 25
+YENIDEN_DENE = 5
+ZAMANASIMI   = 15

@@ -283,11 +283,14 @@ namespace HT_SECIM
                 return;
             }
 
+            headTip.SetToolTip(lbl_veri, null);
+
             switch (VeriKaynagi.Durum)
             {
                 case KaynakDurumu.Kopuk:
-                    lbl_veri.Text = "API YOK";
+                    lbl_veri.Text = "API YOK  ·  DENENİYOR";
                     lbl_veri.BackColor = Tema.Al;
+                    headTip.SetToolTip(lbl_veri, ApiAyarlari.YenidenDene + " sn'de bir yeniden bağlanılıyor. Tıklayınca hemen denenir.");
                     break;
 
                 case KaynakDurumu.Bagli:
@@ -315,6 +318,14 @@ namespace HT_SECIM
         /// <summary> Gostergeye tiklayinca acik sayfa veriden tazelenir. </summary>
         private void lbl_veri_Click(object sender, EventArgs e)
         {
+            // API kopukken tiklamak araligi beklemeden yeniden dener.
+            if (ApiAyarlari.ApiKullan && VeriKaynagi.Durum == KaynakDurumu.Kopuk)
+            {
+                CLog.Log("OPERATOR", "API YENIDEN DENE");
+                VeriKaynagi.SimdiKontrolEt();
+                return;
+            }
+
             if (selectedCard == null) return;
 
             IScenePage sayfa = GetPage(selectedCard.Scene) as IScenePage;

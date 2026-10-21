@@ -43,6 +43,8 @@ namespace HT_SECIM.Core
     ///      "kopuk" olur. Grafikler calismaya devam eder.
     ///   4. Her basarili cekiste veri onbellek dosyasina yazilir; uygulama
     ///      API kapaliyken acilirsa son bilinen veriyle baslar.
+    ///   5. API'ye ulasilamazken ARALIK beklenmez; YENIDEN_DENE saniyede bir
+    ///      denenir. API geri gelince normal araliga donulur.
     /// </summary>
     public static class VeriKaynagi
     {
@@ -107,6 +109,8 @@ namespace HT_SECIM.Core
 
             try
             {
+                if (Durum == KaynakDurumu.Kopuk) CLog.Detail("API YENIDEN DENENIYOR", ApiAyarlari.SurumAdresi);
+
                 SurumCevabi surum = SurumOku();
                 if (surum == null) return;
 
@@ -216,11 +220,29 @@ namespace HT_SECIM.Core
 
             if (degisti)
             {
-                if (yeni == KaynakDurumu.Kopuk) CLog.Error("API KOPTU", aciklama);
+                if (yeni == KaynakDurumu.Kopuk) CLog.Error("API KOPTU", aciklama + " / " + ApiAyarlari.YenidenDene + " sn'de bir yeniden denenecek");
                 else CLog.Log("API BAGLANDI", aciklama);
+
+                AraligiAyarla(yeni);
             }
 
             if (OnDurum != null) OnDurum(yeni, aciklama);
+        }
+
+        /// <summary>
+        /// Kopukken kisa aralikla, bagliyken normal aralikla sorulur.
+        /// Kopma aninda ARALIK (25 sn ve ustu) beklemek, API geri geldiginde
+        /// reji o kadar sure "API YOK" gorsun demek.
+        /// </summary>
+        private static void AraligiAyarla(KaynakDurumu durum)
+        {
+            Timer z = zamanlayici;
+            if (z == null) return;
+
+            int ms = (durum == KaynakDurumu.Kopuk ? ApiAyarlari.YenidenDene : ApiAyarlari.Aralik) * 1000;
+
+            try { z.Change(ms, ms); }
+            catch (ObjectDisposedException) { }
         }
 
         /// <summary>

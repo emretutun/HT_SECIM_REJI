@@ -26,6 +26,9 @@ namespace HT_SECIM.Core
         /// <summary> Surum sorgulama araligi, saniye. </summary>
         public static int Aralik { private set; get; }
 
+        /// <summary> API'ye ulasilamazken kac saniyede bir yeniden denenecek. </summary>
+        public static int YenidenDene { private set; get; }
+
         /// <summary> Tek bir istegin en fazla bekleyecegi sure, saniye. </summary>
         public static int Zamanasimi { private set; get; }
 
@@ -35,8 +38,9 @@ namespace HT_SECIM.Core
             ApiKullan  = false;
             Adres      = "";
             Anahtar    = "";
-            Aralik     = 25;
-            Zamanasimi = 15;
+            Aralik      = 25;
+            YenidenDene = 5;
+            Zamanasimi  = 15;
 
             foreach (string[] p in ConfigReader.ReadLines(ConfigPaths.ApiFile))
             {
@@ -63,6 +67,10 @@ namespace HT_SECIM.Core
                         Aralik = SayiOku(val, Aralik, 5, 600);
                         break;
 
+                    case "YENIDEN_DENE":
+                        YenidenDene = SayiOku(val, YenidenDene, 2, 600);
+                        break;
+
                     case "ZAMANASIMI":
                         Zamanasimi = SayiOku(val, Zamanasimi, 3, 120);
                         break;
@@ -76,7 +84,7 @@ namespace HT_SECIM.Core
             }
 
             CLog.Log("API AYARLARI",
-                (ApiKullan ? "API: " + Adres + " / " + Aralik + " sn" : "yerel veri.json"));
+                (ApiKullan ? "API: " + Adres + " / " + Aralik + " sn (kopukken " + YenidenDene + " sn)" : "yerel veri.json"));
         }
 
         public static string SurumAdresi { get { return Adres + "/api/v1/surum"; } }

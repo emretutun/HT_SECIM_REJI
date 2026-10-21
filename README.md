@@ -53,7 +53,7 @@ Satırlar `=` ile bölünür, `//` ile başlayan satırlar yorumdur.
 | `scenes` | Sahne listesi: numara, ekran adı, Viz yolu, önizleme resmi, director ve kök container adları. `GRUP =` satırı kart listesindeki başlıkları belirler |
 | `commands` | Viz komut şablonları (HAZIRLA/VER/AL/GÜNCELLE), bar sınırları, renkler, sahneye özel ayarlar |
 | `iplist` | Viz Engine adresleri |
-| `api` | Veri kaynağı: `KAYNAK`, `ADRES`, `ANAHTAR`, `ARALIK` |
+| `api` | Veri kaynağı: `KAYNAK`, `ADRES`, `ANAHTAR`, `ARALIK`, `YENIDEN_DENE` |
 | `thumbs/` | Kart önizleme resimleri (`01.png` … `21.png`) |
 | `veri.json` | Yerel veri — API yokken kullanılır |
 
@@ -73,6 +73,10 @@ API modunda uygulama her `ARALIK` saniyede bir sürüm numarasını sorar; numar
 değişmediyse hiçbir şey indirmez. Değiştiğinde tam paketi çeker ve
 `veri_cache.json` dosyasına yazar. Açılışta önce bu önbellek okunur — API
 kapalıyken açılsa bile uygulama son bilinen veriyle başlar, boş ekran gelmez.
+
+API'ye ulaşılamazsa gösterge **API YOK · DENENİYOR** olur ve uygulama
+`YENIDEN_DENE` saniyede bir (varsayılan 5) yeniden bağlanmaya çalışır; API geri
+gelince normal `ARALIK`'a döner. Göstergeye tıklamak beklemeden hemen dener.
 
 ### Yeni veri geldiğinde
 
